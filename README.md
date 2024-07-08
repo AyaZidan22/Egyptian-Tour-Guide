@@ -1,4 +1,4 @@
-#ETG
+ETG
 
 A new Flutter project.
 
