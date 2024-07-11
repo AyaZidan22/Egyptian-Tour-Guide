@@ -1,4 +1,4 @@
-name: travelapp
+name: ETG
 description: "A new Flutter project."
 # The following line prevents the package from being accidentally published to
 # pub.dev using `flutter pub publish`. This is preferred for private packages.
@@ -43,17 +43,36 @@ dependencies:
   dropdown_search: ^5.0.6
   http: ^1.2.0
   logger: ^2.0.2+1
-  google_sign_in: ^6.2.1
   shared_preferences: ^2.2.2
   jwt_decoder: ^2.0.1
   fancy_button_flutter: ^1.0.3+1
   provider: ^6.1.1
   google_fonts: ^6.1.0
   flutter_tts: ^4.0.2
+  flutter_bloc: ^8.1.5
+  dio: ^5.4.3+1
+  json_annotation: ^4.9.0
+  json_serializable: ^6.8.0
+  build_runner: 2.4.9
+  equatable: ^2.0.5
+  carousel_slider: ^4.2.1
+  flutter_map: ^7.0.1
+  latlong2: ^0.9.1
+  url_launcher: ^6.3.0
+  pin_code_fields: ^8.0.1
+  youtube_player_flutter: ^9.0.1
+  image_gallery_saver: ^2.0.3
+  path_provider: ^2.1.3
+  permission_handler: ^11.3.1
+  image: ^4.2.0
+  flutter_launcher_icons: ^0.13.1
+  flutter_inappwebview: ^6.0.0
+  video_player: ^2.9.1
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
+    
 
   # The "flutter_lints" package below contains a set of recommended lints to
   # encourage good coding practices. The lint set provided by the package is
@@ -75,86 +94,46 @@ flutter:
 
   # To add assets to your application, add an assets section, like this:
   assets:
-    - img/google.png
-    - img/apple_icon.png
-    - img/df.png
-    - img/profile_icon.png
-    - img/mail.png
-    - img/Temple.png
-    - img/Aswan.png
-    - img/abu_simbel.jpeg
-    - img/detectionphoto.jpg
-    - img/karnak.jpg
-    - img/pyramids1.jpg
-    - img/Musum.jpg
-    - img/beaches.jpg
-    - img/mountains.jpg
-    - img/oasis.webp
-    - img/diving.jpg
-    - img/nile.jpg
-    - img/sound-and-lights-hows.webp
-    - img/ballon.jpg
-    - img/c5.jpg
-    - img/sphinx.webp
-    - img/Step Pyramid of Saqqara & Saqqara Necropolis.webp
-    - img/Valley-Of-The-Kings.jpg
-    - img/Valley-of-the-queens.jpg
-    - img/denderaext.jpg
-    - img/Luxor_Temple.jpg
-    - img/philae.webp
-    - img/Kom-Ombo.png
-    - img/Colossi-of-Memnon.jpg
-    - img/Medinet Habu.jpg
-    - img/Ramesseum.jpg
-    - img/Tombs of Sennoferjpg.jpg
-    - img/Tomb-of-Ramses-VI.jpg
-    - img/tombs-of-the-nobels.jpg
-    - img/temple-of-seti.jpg
-    - img/tut.jpg
-    - img/Tomb of Ramses III.jpg
-    - img/Qubbet-El-Hawa.jpg
-    - img/Temple-of-edfu.jpg
-    - img/Temple of Hatshepsut.jpg
-    - img/Oases/Bahariya_oasia.jpg
-    - img/Oases/Dakhla_Osasis.jpg
-    - img/Oases/Farafra-Oasis.jpg
-    - img/Oases/Kharga_Oasis.jpg
-    - img/Oases/Siwa-Oasis.png
-    - img/Oases/Wadi El-Rayan.jpg
-    - img/Beaches/agiba_beach.jpg
-    - img/Beaches/el_gouna.jpg
-    - img/Beaches/fjord_bay_taba.jpg
-    - img/Beaches/mahmya_island.jpg
-    - img/Beaches/nuweiba.jpg
-    - img/Beaches/ras_abu_galoum.jpg
-    - img/Beaches/ras_um_sid.jpg
-    - img/Beaches/sahl_hasheesh_beach.jpg
-    - img/Beaches/sharm_el_luli.jpg
-    - img/Museums/IslamicArt.png
-    - img/Museums/Luxor.jpg
-    - img/Museums/Manial Palace Museum.png
-    - img/Museums/nubian.jpg
-    - img/Museums/The copic.png
-    - img/Museums/The-Egyptiam-Museum-Egypt.jpg
-    - img/Museums/The-Grand-Egyptian-Museum.jpg
-    - img/Museums/The-National-Museum-of-Egyptian-Civilization.jpg
-    - img/Museums/PortSaid.jpg
-    - img/Mountains/63_full.jpg
-    - img/Mountains/142287-شايب-البنات.jpg
-    - img/Mountains/Marsa_Alam_-_Red_Sea.jpg
-    - img/Mountains/Mount_Moses.jpg
-    - img/Mountains/SiwaMautaWestSide.jpg
-    - img/Mountains/The_perspective_of_the_galala_Plateau_Road_in_egypt.jpg
-    - img/Mountains/جبل-الحلال-في-مصر.jpg
-    - img/Statues/Khafre.webp
-    - img/Statues/ramsis.jpg
-    - img/Statues/tut.jpg
-    - img/abuelhul.jpg
-  
+    - img/ancientegypt/
+    - img/Beaches/
+    - img/Mountains/
+    - img/Museums/
+    - img/Oases/
+    - img/others/
+    - img/Statues/
+    - img/TopActivities/
+    - img/streets/
+    - img/keyboard/A/
+    - img/keyboard/B/
+    - img/keyboard/C/
+    - img/keyboard/D/
+    - img/keyboard/E/
+    - img/keyboard/F/
+    - img/keyboard/G/
+    - img/keyboard/H/
+    - img/keyboard/I/
+    - img/keyboard/J/
+    - img/keyboard/K/
+    - img/keyboard/L/
+    - img/keyboard/M/
+    - img/keyboard/N/
+    - img/keyboard/O/
+    - img/keyboard/P/
+    - img/keyboard/Q/
+    - img/keyboard/R/
+    - img/keyboard/S/
+    - img/keyboard/T/
+    - img/keyboard/U/
+    - img/keyboard/V/
+    - img/keyboard/W/
+    - img/keyboard/X/
+    - img/keyboard/Y/
+    - img/keyboard/Z/
 
-
-    
-    
+flutter_icons:
+  android: true
+  ios: true
+  image_path: "img/others/EyeOfRa.png"  
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware

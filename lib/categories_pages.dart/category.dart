@@ -1,23 +1,25 @@
+import 'package:ETG/detail_pages.dart/detail_template.dart';
+import 'package:ETG/provider/favouraite_provider.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
-import 'package:travelapp/Component/colors.dart';
-import 'package:travelapp/detail_pages.dart/detail_template.dart';
-import 'package:travelapp/provider/favouraite_provider.dart';
 
 class CustomCategory extends StatefulWidget {
-  final List<Map<String, String>> items;
+  final List<Map<String, dynamic>> items;
+
   const CustomCategory({super.key, required this.items});
 
   @override
-  State<CustomCategory> createState() => _CustomCategoryState();
+  CustomCategoryState createState() => CustomCategoryState();
 }
 
-class _CustomCategoryState extends State<CustomCategory> {
-  List<Map<String, String>> filteredItems = [];
+class CustomCategoryState extends State<CustomCategory> {
+  List<Map<String, dynamic>> filteredItems = [];
+
   @override
   void initState() {
     super.initState();
-    filteredItems = List<Map<String, String>>.from(widget.items);
+    filteredItems = List<Map<String, dynamic>>.from(widget.items);
   }
 
   void filterSearchResults(String query) {
@@ -30,121 +32,191 @@ class _CustomCategoryState extends State<CustomCategory> {
       });
     } else {
       setState(() {
-        filteredItems = List<Map<String, String>>.from(widget.items);
+        filteredItems = List<Map<String, dynamic>>.from(widget.items);
       });
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        Container(
-          padding: const EdgeInsets.only(top: 40, left: 15, right: 15),
-          child: TextField(
-            onChanged: (value) {
-              filterSearchResults(value);
-            },
-            decoration: InputDecoration(
-                hintText: "Search",
-                hintStyle: const TextStyle(color: AppColors.mainColor),
-                prefixIcon: const Icon(
-                  Icons.search,
-                  color: AppColors.mainColor,
+    return Consumer<FavouriteProvider>(
+      builder: (context, favouriteProvider, child) {
+        return Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            Padding(
+              padding: const EdgeInsets.fromLTRB(15, 40, 15, 20),
+              child: Container(
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(15),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.grey.withOpacity(0.3),
+                      spreadRadius: 1,
+                      blurRadius: 5,
+                      offset: const Offset(0, 3),
+                    ),
+                  ],
                 ),
-                fillColor: Colors.grey.shade100,
-                filled: true,
-                border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(10),
-                    borderSide: BorderSide.none)),
-          ),
-        ),
-        Expanded(
-          child:
-              Consumer<FavouriteProvider>(builder: (context, provider, child) {
-            return ListView.builder(
-              itemCount: filteredItems.length,
-              itemBuilder: (context, i) {
-                return Padding(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 15, vertical: 5),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      InkWell(
-                        onTap: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => CustomDetailPage(
-                                  img: filteredItems[i]["img"]!,
-                                  itemName: filteredItems[i]["name"]!,
-                                  history: filteredItems[i]["history"],
-                                  description: filteredItems[i]["description"],
-                                  location: filteredItems[i]["location"],
-                                  openingHours: filteredItems[i]
-                                      ["openingHours"],
-                                  prices: filteredItems[i]["prices"],
-                                  tips: filteredItems[i]["tips"]),
-                            ),
-                          );
-                        },
-                        child: Container(
-                          height: 200,
-                          decoration: BoxDecoration(
-                            color: Colors.black,
-                            borderRadius: BorderRadius.circular(15),
-                            image: DecorationImage(
-                              image: AssetImage(filteredItems[i]["img"]!),
-                              fit: BoxFit.cover,
-                            ),
+                child: TextField(
+                  onChanged: (value) {
+                    filterSearchResults(value);
+                  },
+                  decoration: InputDecoration(
+                    contentPadding: const EdgeInsets.symmetric(vertical: 15),
+                    hintText: "Search",
+                    hintStyle: GoogleFonts.plusJakartaSans(
+                      color: const Color(0XFFA17D1C),
+                    ),
+                    prefixIcon: const Icon(
+                      Icons.search,
+                      color: Color(0XFFA17D1C),
+                    ),
+                    border: InputBorder.none,
+                  ),
+                ),
+              ),
+            ),
+            Expanded(
+              child: ListView.builder(
+                padding: const EdgeInsets.symmetric(horizontal: 15),
+                itemCount: filteredItems.length,
+                itemBuilder: (context, index) {
+                  bool isFavorite =
+                      favouriteProvider.isExist(filteredItems[index]);
+                  return GestureDetector(
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => CustomDetailPage(
+                            img: filteredItems[index]["img"]!,
+                            itemName: filteredItems[index]["name"]!,
+                            description: filteredItems[index]["description"],
+                            location: filteredItems[index]["location"],
+                            openingHours: filteredItems[index]["openingHours"],
+                            prices: filteredItems[index]["prices"],
+                            tips: filteredItems[index]["tips"],
+                            latitude: filteredItems[index]["latitude"],
+                            longitude: filteredItems[index]["longitude"],
+                            url: filteredItems[index]["url"],
                           ),
                         ),
+                      );
+                    },
+                    child: Container(
+                      margin: const EdgeInsets.only(bottom: 20),
+                      padding: const EdgeInsets.all(10),
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(15),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.grey.withOpacity(0.3),
+                            spreadRadius: 1,
+                            blurRadius: 5,
+                            offset: const Offset(0, 3),
+                          ),
+                        ],
                       ),
-                      Padding(
-                        padding: const EdgeInsets.all(10),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  filteredItems[i]["name"]!,
-                                  style: const TextStyle(
-                                      fontSize: 15,
-                                      fontWeight: FontWeight.w600,
-                                      color: AppColors.mainColor),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                        children: [
+                          Stack(
+                            children: [
+                              ClipRRect(
+                                borderRadius: BorderRadius.circular(15),
+                                child: Image.asset(
+                                  filteredItems[index]["img"]!,
+                                  height: 200,
+                                  fit: BoxFit.cover,
+                                  width: double.infinity,
                                 ),
-                                Text(filteredItems[i]["descrip"]!,
-                                    style: const TextStyle(
-                                      color: Colors.black,
-                                      
-                                    ))
-                              ],
-                            ),
-                            IconButton(
-                              icon: provider.isExist(filteredItems[i])
-                                  ? const Icon(
-                                      Icons.favorite,
-                                      color: AppColors.mainColor,
-                                    )
-                                  : const Icon(Icons.favorite_border_outlined),
-                              onPressed: () {
-                                provider.toggleFavourite(filteredItems[i]);
-                              },
-                            ),
-                          ],
-                        ),
+                              ),
+                              Positioned(
+                                bottom: 0,
+                                left: 0,
+                                right: 0,
+                                child: Container(
+                                  height: 60,
+                                  decoration: BoxDecoration(
+                                    gradient: LinearGradient(
+                                      colors: [
+                                        Colors.transparent,
+                                        Colors.black.withOpacity(0.7),
+                                      ],
+                                      begin: Alignment.topCenter,
+                                      end: Alignment.bottomCenter,
+                                    ),
+                                    borderRadius: const BorderRadius.vertical(
+                                      bottom: Radius.circular(15),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                              Positioned(
+                                bottom: 10,
+                                left: 10,
+                                right: 10,
+                                child: Text(
+                                  filteredItems[index]["name"]!,
+                                  style: GoogleFonts.plusJakartaSans(
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.white,
+                                  ),
+                                ),
+                              ),
+                              Positioned(
+                                bottom: 0,
+                                right: 10,
+                                child: IconButton(
+                                  icon: Icon(
+                                    isFavorite
+                                        ? Icons.favorite
+                                        : Icons.favorite_border,
+                                    color:
+                                        isFavorite ? Colors.red : Colors.white,
+                                  ),
+                                  onPressed: () {
+                                    favouriteProvider
+                                        .toggleFavourite(filteredItems[index]);
+                                  },
+                                ),
+                              ),
+                            ],
+                          ),
+                          const SizedBox(height: 10),
+                          Row(
+                            children: [
+                              const Icon(
+                                Icons.location_on,
+                                size: 16,
+                                color: Color(0XFFA17D1C),
+                              ),
+                              const SizedBox(width: 4),
+                              Expanded(
+                                child: Text(
+                                  filteredItems[index]["descrip"]!,
+                                  style: GoogleFonts.plusJakartaSans(
+                                    color: const Color(0XFFA17D1C),
+                                  ),
+                                  overflow: TextOverflow.ellipsis,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ],
                       ),
-                    ],
-                  ),
-                );
-              },
-            );
-          }),
-        ),
-      ],
+                    ),
+                  );
+                },
+              ),
+            ),
+          ],
+        );
+      },
     );
   }
 }

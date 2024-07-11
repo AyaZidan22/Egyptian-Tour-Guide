@@ -1,18 +1,25 @@
+import 'package:ETG/navpages/games/games_temp.dart';
 import 'package:flutter/material.dart';
-import 'package:travelapp/Component/colors.dart';
-import 'package:travelapp/navpages/favourite_page.dart';
-import 'package:travelapp/navpages/home_page.dart';
-import 'package:travelapp/navpages/profilepage.dart/my_page.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:ETG/navpages/favourite_page.dart';
+import 'package:ETG/navpages/home_page.dart';
+import 'package:ETG/navpages/my_page.dart';
 
 class MainPage extends StatefulWidget {
-  const MainPage({Key? key}) : super(key: key);
+  const MainPage({super.key});
 
   @override
-  __MainPageState createState() => __MainPageState();
+  MainPageState createState() => MainPageState();
 }
 
-class __MainPageState extends State<MainPage> {
-  List pages = [const HomePage(), const FavouritePage(), const ProfilePage()];
+class MainPageState extends State<MainPage> {
+  List<Widget> pages = [
+    const HomePage(),
+    const FavouritePage(),
+    const GamesTemp(),
+    const ProfilePage()
+  ];
+
   int currentIndex = 0;
   void onTap(int index) {
     setState(() {
@@ -23,40 +30,100 @@ class __MainPageState extends State<MainPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.grey.shade300,
-      body: pages[currentIndex],
-      bottomNavigationBar: BottomNavigationBar(
-          unselectedFontSize: 0,
-          selectedFontSize: 0,
+      body: AnimatedSwitcher(
+        duration: const Duration(milliseconds: 300),
+        child: pages[currentIndex],
+      ),
+      bottomNavigationBar: Container(
+        decoration: BoxDecoration(
+          color: const Color(0xFFFAF7F0),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.grey.withOpacity(0.5),
+              spreadRadius: 3,
+              blurRadius: 7,
+              offset: const Offset(0, 3), // changes position of shadow
+            ),
+          ],
+        ),
+        child: BottomNavigationBar(
+          unselectedFontSize: 12,
+          selectedFontSize: 12,
           type: BottomNavigationBarType.fixed,
-          backgroundColor: Colors.grey.shade300,
+          backgroundColor: const Color(0xFFFAF7F0),
           onTap: onTap,
           currentIndex: currentIndex,
-          selectedItemColor: AppColors.mainColor,
-          unselectedItemColor: Colors.brown[200],
-          showUnselectedLabels: false,
+          selectedItemColor: const Color(0XFFA17D1C),
+          unselectedItemColor: const Color(0xFFA17D1C).withOpacity(0.5),
+          showUnselectedLabels: true,
           showSelectedLabels: true,
           elevation: 10,
-          items: const [
+          items: [
             BottomNavigationBarItem(
-                label: "*",
-                icon: Icon(
+              label: "Home",
+              icon: Padding(
+                padding: const EdgeInsets.only(top: 8.0),
+                child: Icon(
                   Icons.home,
-                  size: 32,
-                )),
+                  size: 30,
+                  color: currentIndex == 0
+                      ? const Color(0XFFA17D1C)
+                      : const Color(0xFFA17D1C).withOpacity(0.5),
+                ),
+              ),
+            ),
             BottomNavigationBarItem(
-                label: "*",
-                icon: Icon(
+              label: "Favorites",
+              icon: Padding(
+                padding: const EdgeInsets.only(top: 8.0),
+                child: Icon(
                   Icons.favorite,
-                  size: 25,
-                )),
+                  size: 30,
+                  color: currentIndex == 1
+                      ? const Color(0XFFA17D1C)
+                      : const Color(0xFFA17D1C).withOpacity(0.5),
+                ),
+              ),
+            ),
             BottomNavigationBarItem(
-                label: "*",
-                icon: Icon(
+              label: "Games",
+              icon: Padding(
+                padding: const EdgeInsets.only(top: 8.0),
+                child: Icon(
+                  Icons.sports_esports,
+                  size: 30,
+                  color: currentIndex == 2
+                      ? const Color(0XFFA17D1C)
+                      : const Color(0xFFA17D1C).withOpacity(0.5),
+                ),
+              ),
+            ),
+            BottomNavigationBarItem(
+              label: "Profile",
+              icon: Padding(
+                padding: const EdgeInsets.only(top: 8.0),
+                child: Icon(
                   Icons.person,
                   size: 30,
-                )),
-          ]),
+                  color: currentIndex == 3
+                      ? const Color(0XFFA17D1C)
+                      : const Color(0xFFA17D1C).withOpacity(0.4),
+                ),
+              ),
+            ),
+          ],
+          selectedLabelStyle: GoogleFonts.plusJakartaSans(
+            color: const Color(0XFFA17D1C),
+            fontWeight: FontWeight.w500,
+            fontSize: 12,
+          ),
+          unselectedLabelStyle: GoogleFonts.plusJakartaSans(
+            color: const Color(0xFFA17D1C).withOpacity(0.5),
+            fontWeight: FontWeight.w400,
+            fontSize: 12,
+          ),
+        ),
+      ),
     );
   }
 }

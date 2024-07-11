@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:travelapp/detail_pages.dart/detail_template.dart';
+import 'package:ETG/detail_pages.dart/detail_template.dart';
 
 class NileCruises extends StatelessWidget {
   const NileCruises({super.key});
@@ -7,7 +7,7 @@ class NileCruises extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return const CustomDetailPage(
-      img: "img/nile.jpg",
+      img: "img/TopActivities/nile.jpg",
       itemName: 'Nile Cruises',
       description:
           """Nile cruises from Aswan to Luxor and vice versa, are a type of tourism on which the cities of southern Upper Egypt depend, attracting millions of tourists annually from different countries of the world.

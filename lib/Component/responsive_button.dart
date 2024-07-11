@@ -9,14 +9,13 @@ class ResponsiveButton extends StatelessWidget {
   final Color backgroundColor;
   final Color textColor;
   const ResponsiveButton(
-      {Key? key,
+      {super.key,
       required this.text,
       required this.backgroundColor,
       required this.textColor,
       this.width,
       required this.isResponsive,
-      required this.onClick})
-      : super(key: key);
+      required this.onClick});
 
   @override
   Widget build(BuildContext context) {

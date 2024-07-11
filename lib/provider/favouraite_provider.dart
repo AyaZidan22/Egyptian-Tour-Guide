@@ -1,22 +1,30 @@
 import 'dart:convert';
-
 import 'package:flutter/foundation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class FavouriteProvider extends ChangeNotifier {
-  List<Map<String, String>> favouriteItems = [];
-  final String userId;
+  List<Map<String, dynamic>> favouriteItems = [];
+  String? userId;
   bool loaded = false;
 
   bool get isLoaded => loaded;
-  FavouriteProvider(this.userId) {
-    loadFavourites();
-    print(userId);
+
+  FavouriteProvider() {
+    loadUserId();
   }
 
   String get prefsKey => "favourites_$userId";
 
-  void toggleFavourite(Map<String, String> favouriteItem) async {
+  Future<void> loadUserId() async {
+    final prefs = await SharedPreferences.getInstance();
+    userId = prefs.getString('userId');
+    if (userId != null) {
+      await loadFavourites();
+    }
+    notifyListeners();
+  }
+
+  void toggleFavourite(Map<String, dynamic> favouriteItem) async {
     final isExist = this.isExist(favouriteItem);
     if (isExist) {
       favouriteItems
@@ -28,7 +36,7 @@ class FavouriteProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  bool isExist(Map<String, String> favouriteItem) {
+  bool isExist(Map<String, dynamic> favouriteItem) {
     return favouriteItems.any((item) => item["name"] == favouriteItem["name"]);
   }
 
@@ -39,18 +47,20 @@ class FavouriteProvider extends ChangeNotifier {
   }
 
   Future<void> saveFavourites() async {
+    if (userId == null) return;
     final prefs = await SharedPreferences.getInstance();
     String jsonString = jsonEncode(favouriteItems);
     await prefs.setString(prefsKey, jsonString);
   }
 
   Future<void> loadFavourites() async {
+    if (userId == null) return;
     final prefs = await SharedPreferences.getInstance();
     String? jsonString = prefs.getString(prefsKey);
     if (jsonString != null) {
       List<dynamic> jsonList = jsonDecode(jsonString);
       favouriteItems = jsonList
-          .map((favouriteItem) => Map<String, String>.from(favouriteItem))
+          .map((favouriteItem) => Map<String, dynamic>.from(favouriteItem))
           .toList();
     }
     loaded = true;

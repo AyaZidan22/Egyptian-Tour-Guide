@@ -1,130 +1,120 @@
-import 'dart:convert';
-
+import 'package:ETG/Component/custom_material_button.dart';
+import 'package:ETG/authpages/log_in.dart';
+import 'package:ETG/business_logic/cubit/verification_cubit.dart';
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:pin_code_fields/pin_code_fields.dart';
 
-import 'package:travelapp/Component/custom_materialbutton.dart';
-import 'package:travelapp/authpages/networkHandler.dart';
-
-class VerificationPage extends StatefulWidget {
+class VerificationPage extends StatelessWidget {
   final String email;
-  const VerificationPage({required this.email, super.key});
+  const VerificationPage({super.key, required this.email});
 
   @override
-  State<VerificationPage> createState() => _VerificationPageState();
+  Widget build(BuildContext context) {
+    return BlocProvider(
+      create: (BuildContext context) => VerificationCubit(),
+      child: VerificationForm(email: email),
+    );
+  }
 }
 
-class _VerificationPageState extends State<VerificationPage> {
-  TextEditingController verificationCodeController = TextEditingController();
+class VerificationForm extends StatefulWidget {
+  final String email;
+  const VerificationForm({super.key, required this.email});
 
-  Future<void> verifyEmail() async {
-    if (verificationCodeController.text.isNotEmpty) {
-      var regBody = {
-        "email": widget.email,
-        "otp": verificationCodeController.text,
-      };
-      try {
-        var response = await http.post(
-          Uri.parse(verifyEmailUrl),
-          headers: {"Content-Type": "application/json"},
-          body: jsonEncode(regBody),
-        );
-        print('Request body: $regBody');
-        print('Response status code: ${response.statusCode}');
-        print('Response body: ${response.body}');
+  @override
+  State<VerificationForm> createState() => VerificationFormState();
+}
 
-        final Map<String, dynamic> jsonResponse = jsonDecode(response.body);
-        String status = jsonResponse['status'];
-        String message = jsonResponse['message'];
-        
-        if (status == 'SUCCESS') {
-        
-          showDialog(
-            context: context,
-            builder: (BuildContext context) {
-              return AlertDialog(
-                title: const Text("Verification Success"),
-                content: Text(message),
-                actions: <Widget>[
-                  TextButton(
-                    onPressed: () {
-                      Navigator.of(context).pop();
-                      Navigator.of(context).pushNamed("LoginPage");
-                    },
-                    child: const Text(
-                      'OK',
-                      style: TextStyle(color: Colors.black),
-                    ),
-                  ),
-                ],
-              );
-            },
-          );
-        } else {
-          showDialog(
-            context: context,
-            builder: (BuildContext context) {
-              return AlertDialog(
-                title: const Text("Verification Failed"),
-                content: Text(message),
-                actions: <Widget>[
-                  TextButton(
-                    onPressed: () {
-                      Navigator.of(context).pop();
-                    },
-                    child: const Text(
-                      'OK',
-                      style: TextStyle(color: Colors.black),
-                    ),
-                  ),
-                ],
-              );
-            },
-          );
-        }
-      } catch (e) {
-        print("An error occurred during the post request: $e");
-      }
-    }
-  }
+class VerificationFormState extends State<VerificationForm> {
+  final GlobalKey<FormState> formKey = GlobalKey<FormState>();
+  final otpController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.grey.shade300,
-      appBar: AppBar(
-        title: const Text('Verify Account'),
-        backgroundColor: Colors.grey.shade300,
-      ),
-      body: Center(
-        child: Padding(
-          padding: const EdgeInsets.all(20.0),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
+      body: BlocConsumer<VerificationCubit, VerificationState>(
+        listener: (context, state) {
+          if (state is VerificationSuccess) {
+            Navigator.pushReplacement(context,
+                MaterialPageRoute(builder: (context) => const LoginPage()));
+          } else if (state is VerificationFailed) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(content: Text(state.error)),
+            );
+          }
+        },
+        builder: (context, state) {
+          return Stack(
             children: [
-              TextField(
-                  controller: verificationCodeController,
-                  keyboardType: TextInputType.number,
-                  decoration: InputDecoration(
-                      enabledBorder: const OutlineInputBorder(
-                        borderSide: BorderSide(color: Colors.white),
-                      ),
-                      focusedBorder: OutlineInputBorder(
-                          borderSide: BorderSide(color: Colors.grey.shade400)),
-                      fillColor: Colors.grey.shade200,
-                      filled: true,
-                      hintText: "Verification Code")),
-              const SizedBox(height: 20.0),
-              CustomMaterialButton(
-                onPressed: () {
-                  verifyEmail();
-                },
-                text: "Verify",
-                backgroundColor: const Color.fromRGBO(255, 183, 77, 1),
+              SingleChildScrollView(
+                child: Form(
+                  key: formKey,
+                  child: Padding(
+                    padding: const EdgeInsets.all(16.0),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        const SizedBox(
+                          height: 80,
+                        ),
+                        Image.asset(
+                          'img/others/EyeOfRa.png',
+                          height: 150,
+                        ),
+                        const SizedBox(height: 50),
+                        Text(
+                          'Enter the OTP sent to your email',
+                          style: GoogleFonts.plusJakartaSans(fontSize: 16),
+                        ),
+                        const SizedBox(height: 20),
+                        PinCodeTextField(
+                          appContext: context,
+                          length: 4,
+                          controller: otpController,
+                          keyboardType: TextInputType.number,
+                          mainAxisAlignment: MainAxisAlignment.spaceAround,
+                          pinTheme: PinTheme(
+                            shape: PinCodeFieldShape.box,
+                            borderRadius: BorderRadius.circular(5),
+                            fieldHeight: 50,
+                            fieldWidth: 60,
+                            activeFillColor: Colors.white,
+                            selectedFillColor: Colors.white,
+                            inactiveFillColor: Colors.white,
+                            activeColor: const Color(0xFFF0E3C2),
+                            selectedColor: const Color(0xFFFAC738),
+                            inactiveColor: const Color(0xFFF0E3C2),
+                          ),
+                        ),
+                        const SizedBox(height: 20),
+                        CustomMaterialButton(
+                          text: 'Verify',
+                          onPressed: () {
+                            if (formKey.currentState!.validate()) {
+                              context.read<VerificationCubit>().verifyEmail(
+                                  widget.email, otpController.text);
+                            }
+                          },
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
               ),
+              if (state is VerificationLoading)
+                Container(
+                  color: Colors.black.withOpacity(0.5),
+                  child: const Center(
+                    child: CircularProgressIndicator(
+                      color: Color(0XFFA17D1C),
+                    ),
+                  ),
+                ),
             ],
-          ),
-        ),
+          );
+        },
       ),
     );
   }

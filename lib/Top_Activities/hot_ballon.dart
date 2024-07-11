@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:travelapp/detail_pages.dart/detail_template.dart';
+import 'package:ETG/detail_pages.dart/detail_template.dart';
 
 class HotBallon extends StatelessWidget {
   const HotBallon({super.key});
@@ -7,7 +7,7 @@ class HotBallon extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return const CustomDetailPage(
-      img: 'img/ballon.jpg',
+      img: 'img/TopActivities/ballon.jpg',
       itemName: 'Hot Air Balloons Ride',
       description:
           """Hot air ballooning in Luxor is an incredible experience that you'll never forget. The views are breathtaking, the experience is unique, and it's something you can't do anywhere else.
